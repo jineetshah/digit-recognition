@@ -1,13 +1,6 @@
 import gradio as gr
-import numpy as np
 import requests
-import json
 import pandas as pd
-from PIL import Image
-import io
-import base64
-import tempfile
-import matplotlib.pyplot as plt
 
 API_URL = "https://api-inference.huggingface.co/models/AliGhiasvand86/gisha_digit_recognition"
 headers = {"Authorization": "Bearer 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"}
@@ -17,33 +10,13 @@ def query(image_path):
         response = requests.post(API_URL, headers=headers, files={"file": file})
     return response.json()
 
-def predict(img):
-    # Convert the numpy array to a PIL Image object
-    img_pil = Image.fromarray((img * 255).astype(np.uint8))
-
-    # Save the image to a temporary file
-    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
-        image_path = temp_file.name
-        img_pil.save(image_path)
-        print("Image saved to:", image_path)
-
-    # Display the saved image
-    plt.imshow(img_pil)
-    plt.axis('off')
-    plt.title('Saved Image')
-    plt.show()
-
-    # Send the image file path to the query function
-    print("Sending image to API...")
-    pred = query(image_path)
-    print("API response:", pred)
-
-    # Convert the JSON output to a pandas DataFrame and return it
-    df = pd.DataFrame(pred)
+def classify_digit(image):
+    result = query(image.name)
+    df = pd.DataFrame(result)
     return df
 
-iface = gr.Interface(predict, inputs='sketchpad',
-                     outputs=gr.outputs.Dataframe(),
-                     allow_flagging='never',
-                     description='Draw a Digit Below... (Draw in the centre for best results)')
-iface.launch(share=False, width=300, height=500)
+sketchpad = gr.inputs.Sketchpad()
+output_box = gr.outputs.Dataframe()
+
+iface = gr.Interface(fn=classify_digit, inputs=sketchpad, outputs=output_box)
+iface.launch()
