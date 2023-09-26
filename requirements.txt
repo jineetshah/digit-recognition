@@ -1,4 +1,6 @@
 gradio
-requests
 numpy
-pillow
+requests
+pandas
+Pillow
+matplotlib

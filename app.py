@@ -7,6 +7,7 @@ from PIL import Image
 import io
 import base64
 import tempfile
+import matplotlib.pyplot as plt
 
 API_URL = "https://api-inference.huggingface.co/models/AliGhiasvand86/gisha_digit_recognition"
 headers = {"Authorization": "Bearer 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"}
@@ -24,9 +25,18 @@ def predict(img):
     with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as temp_file:
         image_path = temp_file.name
         img_pil.save(image_path)
+        print("Image saved to:", image_path)
+
+    # Display the saved image
+    plt.imshow(img_pil)
+    plt.axis('off')
+    plt.title('Saved Image')
+    plt.show()
 
     # Send the image file path to the query function
+    print("Sending image to API...")
     pred = query(image_path)
+    print("API response:", pred)
 
     # Convert the JSON output to a pandas DataFrame and return it
     df = pd.DataFrame(pred)
