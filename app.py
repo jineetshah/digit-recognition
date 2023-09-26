@@ -10,7 +10,7 @@ headers = {"Authorization": "Bearer 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"}
 
 def query(image_path):
     with open(image_path, "rb") as file:
-        response = requests.post(API_URL, headers=headers, files={"file": file})
+        response = requests.post(API_URL, headers=headers, data=file.read())
     return response.json()
 
 def save_array_as_image(array, image_path):
@@ -26,9 +26,9 @@ def classify_digit(image):
     save_array_as_image(image, image_path)
     
     result = query(image_path)
-    df = pd.DataFrame(result)
+    df = pd.DataFrame.from_records(result, columns=["digit"])
     return df
 
 iface = gr.Interface(fn=classify_digit, inputs='sketchpad', outputs=gr.outputs.Dataframe(),
                      allow_flagging='never', description='Draw a Digit Below... (Draw in the centre for best results)')
-iface.launch(share=False, width=300, height=500)
+iface.launch(share=True, width=300, height=500)
