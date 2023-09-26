@@ -15,8 +15,6 @@ def classify_digit(image):
     df = pd.DataFrame(result)
     return df
 
-sketchpad = gr.inputs.Sketchpad()
-output_box = gr.outputs.Dataframe()
-
-iface = gr.Interface(fn=classify_digit, inputs=sketchpad, outputs=output_box)
-iface.launch()
+iface = gr.Interface(fn=classify_digit, inputs='sketchpad', outputs=gr.outputs.Dataframe(),
+                     allow_flagging='never', description='Draw a Digit Below... (Draw in the centre for best results)')
+iface.launch(share=False, width=300, height=500)
