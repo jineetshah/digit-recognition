@@ -15,9 +15,12 @@ def query(data):
     return response.json()
 
 def predict(img):
+    # Convert the numpy array to a PIL Image object
+    img_pil = Image.fromarray((img * 255).astype(np.uint8))
+
     # Convert the image data to a byte array
     img_byte_arr = io.BytesIO()
-    img.save(img_byte_arr, format='PNG')
+    img_pil.save(img_byte_arr, format='PNG')
     img_byte_arr = img_byte_arr.getvalue()
 
     # Send the byte array as data in the query function
@@ -31,4 +34,4 @@ iface = gr.Interface(predict, inputs = 'sketchpad',
                      outputs = gr.outputs.Dataframe(),
                      allow_flagging = 'never',
                      description = 'Draw a Digit Below... (Draw in the centre for best results)')
-iface.launch(share = True, width = 300, height = 500)
+iface.launch(share = False, width = 300, height = 500)
