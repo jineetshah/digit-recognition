@@ -26,7 +26,7 @@ def classify_digit(image):
     save_array_as_image(image, image_path)
     
     result = query(image_path)
-    df = pd.DataFrame.from_records(result, columns=["digit"])
+    df = pd.DataFrame.from_records(result)
     return df
 
 iface = gr.Interface(fn=classify_digit, inputs='sketchpad', outputs=gr.outputs.Dataframe(),
