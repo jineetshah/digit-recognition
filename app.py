@@ -14,7 +14,7 @@ def predict(img):
     # img_array = np.array(img)
     # img_array = img_array.reshape(1, 28, 28)
     # img_array = img_array/255
-    # pred = loaded_CNN.predict(img_array)/
+    # pred = loaded_CNN.predict(img_array)
     pred = query(img)
     return pred
 
